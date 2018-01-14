@@ -1,5 +1,3 @@
-bin/Debug/
-bin/Release/
+bin/
 obj/
-!bin/Release/RoutineManager.dll
-!bin/Release/RoutineManager.pdb
+
