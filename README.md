@@ -3,6 +3,12 @@ BaseTreeRoutine
 
 BaseTreeRoutine is an extension of PoeHUD's BasePluginSettings designed to allow quick and easy implementation of a plugin written within a behavior tree. Behavior trees allow for code to be easier to maintain, modular, and as complicated or simple as necessary.
 
+### Credits
+* PoeHUD and all their great contributors. https://github.com/TehCheat/PoEHUD
+* Apoc for writing TreeSharp. https://github.com/ApocDev/TreeSharp
+* Zaafar for some help with PoeHUD and giving me a good place to get started
+* AutoFlaskManager and all their great contributors for giving me a good place to get started. https://github.com/Xcesius/AutoFlaskManager
+
 ### Donation Addresses
 * BTC: 1MTKA5qFknUcG68LGZXnmCSvDvvjMbMvRK
 * BCH: 17Eu4YCs7MUnHrBuSeUggbCsnHNX7n5fNZ
