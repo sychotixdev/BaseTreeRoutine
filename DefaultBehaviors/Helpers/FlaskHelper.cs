@@ -134,26 +134,29 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
         {
             if (flask.TotalUses - reservedUses <= 0)
             {
-                //TreeRoutine.LogMessage("Don't have enough uses on flask " + flask.Name + " to use.", 1);
+                if (Core.Settings.Debug)
+                    Core.Log("Don't have enough uses on flask " + flask.Name + " to use.", 1);
                 return false;
             }
 
-            // Can't use a life flask if we are full hp
             if (flask.Action1 == FlaskActions.Life && !Core.PlayerHelper.isHealthBelowPercentage(100))
             {
-                //TreeRoutine.LogMessage("Can't use life flask " + flask.Name + " at full health.", 1);
+                if (Core.Settings.Debug)
+                    Core.Log("Can't use life flask " + flask.Name + " at full health.", 1);
                 return false;
             }
 
             if (flask.Action1 == FlaskActions.Mana && !Core.PlayerHelper.isManaBelowPercentage(100))
             {
-                //TreeRoutine.LogMessage("Can't use mana flask " + flask.Name + " at full mana.", 1);
+                if (Core.Settings.Debug)
+                    Core.Log("Can't use mana flask " + flask.Name + " at full mana.", 1);
                 return false;
             }
 
-            if (flask.Action1 == FlaskActions.Hybrid && (!Core.PlayerHelper.isHealthBelowPercentage(100) || !Core.PlayerHelper.isManaBelowPercentage(100)))
+            if (flask.Action1 == FlaskActions.Hybrid && !(Core.PlayerHelper.isHealthBelowPercentage(100) || Core.PlayerHelper.isManaBelowPercentage(100)))
             {
-                //TreeRoutine.LogMessage("Can't use mana hybrid " + flask.Name + " at full health and mana.", 1);
+                if (Core.Settings.Debug)
+                    Core.Log("Can't use hybrid " + flask.Name + " at full health and mana.", 1);
                 return false;
             }
 
