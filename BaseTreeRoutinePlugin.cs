@@ -8,6 +8,8 @@ using PoeHUD.Controllers;
 using PoeHUD.Hud.Health;
 using PoeHUD.Plugins;
 using TreeSharp;
+using TreeRoutine.Menu;
+using ImGuiNET;
 
 namespace TreeRoutine
 {
@@ -193,6 +195,26 @@ namespace TreeRoutine
                 Cache.InHideout = area.CurrentArea.IsHideout;
                 Cache.InTown = area.CurrentArea.IsTown;
             }
+        }
+
+        protected virtual void RunWindow()
+        {
+            if (!Settings.ShowWindow) return;
+            ImGuiExtension.BeginWindow($"{PluginName} Settings", Settings.LastSettingPos.X, Settings.LastSettingPos.Y, Settings.LastSettingSize.X, Settings.LastSettingSize.Y);
+
+            Settings.TickRate.Value = ImGuiExtension.IntSlider("Tick Rate", Settings.TickRate);
+            Settings.StrictTickRate.Value = ImGuiExtension.Checkbox("Strict Tick Rate", Settings.StrictTickRate);
+            ImGui.Separator();
+            Settings.Debug.Value = ImGuiExtension.Checkbox("Strict Tick Rate", Settings.StrictTickRate);
+
+            // Storing window Position and Size changed by the user
+            if (ImGui.GetWindowHeight() > 21)
+            {
+                Settings.LastSettingPos = ImGui.GetWindowPosition();
+                Settings.LastSettingSize = ImGui.GetWindowSize();
+            }
+
+            ImGui.EndWindow();
         }
     }
 }
