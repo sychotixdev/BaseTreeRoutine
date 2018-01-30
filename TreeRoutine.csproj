@@ -71,7 +71,7 @@
     <Compile Include="BaseTreeCache.cs" />
     <Compile Include="BaseTreeRoutinePlugin.cs" />
     <Compile Include="BaseTreeSettings.cs" />
-    <Compile Include="ImGuiExtension.cs" />
+    <Compile Include="Menu\ImGuiExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

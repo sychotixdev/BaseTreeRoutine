@@ -197,6 +197,12 @@ namespace TreeRoutine
             }
         }
 
+        public override void Render()
+        {
+            base.Render();
+            RunWindow();
+        }
+
         protected virtual void RunWindow()
         {
             if (!Settings.ShowWindow) return;
@@ -205,7 +211,7 @@ namespace TreeRoutine
             Settings.TickRate.Value = ImGuiExtension.IntSlider("Tick Rate", Settings.TickRate);
             Settings.StrictTickRate.Value = ImGuiExtension.Checkbox("Strict Tick Rate", Settings.StrictTickRate);
             ImGui.Separator();
-            Settings.Debug.Value = ImGuiExtension.Checkbox("Strict Tick Rate", Settings.StrictTickRate);
+            Settings.Debug.Value = ImGuiExtension.Checkbox("Debug Mode", Settings.Debug);
 
             // Storing window Position and Size changed by the user
             if (ImGui.GetWindowHeight() > 21)
