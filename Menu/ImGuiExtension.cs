@@ -250,5 +250,16 @@ namespace TreeRoutine.Menu
             didChange = false;
             return currentSelectedItem;
         }
+
+        // Tooltip Hover
+        public static void ToolTip(string desc)
+        {
+            ImGui.SameLine();
+            ImGui.TextDisabled("(?)");
+            if (ImGui.IsItemHovered(HoveredFlags.Default))
+            {
+                ImGui.SetTooltip(desc);
+            }
+        }
     }
 }
