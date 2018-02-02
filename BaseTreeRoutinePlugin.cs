@@ -10,6 +10,7 @@ using PoeHUD.Plugins;
 using TreeSharp;
 using TreeRoutine.Menu;
 using ImGuiNET;
+using System.Collections.Generic;
 
 namespace TreeRoutine
 {
@@ -24,8 +25,7 @@ namespace TreeRoutine
 
         public TCache Cache { get; protected set; }
 
-        protected Composite Tree { get; set; } = new TreeSharp.Action();
-
+        // These are useful for the helper methods
         public Action<object, float> Log => LogMessage;
         public Action<object, float> LogErr => LogError;
 
@@ -33,44 +33,39 @@ namespace TreeRoutine
         public PlayerHelper<TSettings, TCache> PlayerHelper { get; set; } = new PlayerHelper<TSettings, TCache>();
         public TreeHelper<TSettings, TCache> TreeHelper { get; set; } = new TreeHelper<TSettings, TCache>();
 
+        public static TSettingType LoadSettingFile<TSettingType>(String fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                LogError("Cannot find " + fileName + " file. This plugin will exit.", 10);
+                return default(TSettingType);
+            }
 
+            return JsonConvert.DeserializeObject<TSettingType>(File.ReadAllText(fileName));
+        }
 
         public override void Initialise()
         {
             PluginName = "Base Tree Routine Plugin";
-            var flaskFilename = PluginDirectory + @"/config/flaskinfo.json";
-            var debufFilename = "config/debuffPanel.json";
-            var flaskBuffDetailsFileName = PluginDirectory + @"/config/FlaskBuffDetails.json";
-
+            
             Cache = new TCache();
 
-            if (!File.Exists(debufFilename))
-            {
-                LogError("Cannot find " + debufFilename + " file. This plugin will exit.", ErrmsgTime);
-                return;
-            }
-
-            if (!File.Exists(flaskFilename))
-            {
-                LogError("Cannot find " + flaskFilename + " file. This plugin will exit.", ErrmsgTime);
-                return;
-            }
-
-            if (!File.Exists(flaskBuffDetailsFileName))
-            {
-                LogError("Cannot find " + flaskBuffDetailsFileName + " file. This plugin will exit.", ErrmsgTime);
-                return;
-            }
-
-            Cache.FlaskInfo = JsonConvert.DeserializeObject<FlaskInformation>(File.ReadAllText(flaskFilename));
-            Cache.DebuffPanelConfig = JsonConvert.DeserializeObject<DebuffPanelConfig>(File.ReadAllText(debufFilename));
-            Cache.MiscBuffInfo = JsonConvert.DeserializeObject<MiscBuffInfo>(File.ReadAllText(flaskBuffDetailsFileName));
-
+            LoadSettingsFiles();
             InitializeHelpers();
 
             OnPluginToggle();
             Settings.Enable.OnValueChanged += OnPluginToggle;
-            Settings.TickRate.OnValueChanged += RestartTimer;
+        }
+
+        protected virtual void LoadSettingsFiles()
+        {
+            var flaskFilename = PluginDirectory + @"/config/flaskinfo.json";
+            var debufFilename = "config/debuffPanel.json";
+            var flaskBuffDetailsFileName = PluginDirectory + @"/config/FlaskBuffDetails.json";
+
+            Cache.FlaskInfo = LoadSettingFile<FlaskInformation>(flaskFilename);
+            Cache.DebuffPanelConfig = LoadSettingFile<DebuffPanelConfig>(debufFilename);
+            Cache.MiscBuffInfo = LoadSettingFile<MiscBuffInfo>(flaskBuffDetailsFileName);
         }
 
         protected virtual void InitializeHelpers()
@@ -90,14 +85,11 @@ namespace TreeRoutine
                         LogMessage("Enabling " + PluginName + ".", LogmsgTime);
 
                     GameController.Area.OnAreaChange += OnAreaChange;
-
-                    StartTimer();
                 }
                 else
                 {
                     if (Settings.Debug.Value)
                         LogMessage("Disabling " + PluginName + ".", LogmsgTime);
-                    StopTimer();
 
                     GameController.Area.OnAreaChange -= OnAreaChange;
                 }
@@ -108,76 +100,50 @@ namespace TreeRoutine
                 LogError("Error Starting/Stopping " + PluginName + ".", ErrmsgTime);
             }
         }
-        
-        protected void StartTimer()
+
+        public System.Action CreateTreeTickAction(Func<Composite> getTreeRoot)
         {
-            if (Timer == null)
-            {
-                Timer = new Timer(Tick);
-            }
-
-
-            Cache.TickRate = Settings.TickRate;
-            // If we are on a strict tickrate, we will use the period on the timer. Otherwise, we will start the timer back up after every tick
-            Timer.Change(Settings.TickRate, (Settings.StrictTickRate ? Settings.TickRate : Timeout.Infinite));
-        }
-
-        protected void StopTimer()
-        {
-            if (Timer != null)
-            {
-                Timer.Change(Timeout.Infinite, Timeout.Infinite);
-            }
-            if (Tree != null)
-                Tree.Stop(null);
-        }
-
-        private void RestartTimer()
-        {
-            StopTimer();
-            StartTimer();
-        }
-
-        public void Tick(Object stateInfo)
-        {
-            if (Settings.Enable)
+            return () =>
             {
                 if (Settings.Debug)
                     LogMessage("Tick", LogmsgTime);
 
-                if (Tree == null)
+                if (getTreeRoot == null)
                 {
                     if (Settings.Debug)
-                        LogError("Plugin " + PluginName + " tree root was null. Plugin is either still initialising, or has an error.", ErrmsgTime);
+                        LogError("Plugin " + PluginName + " tree root function was null. Plugin is either still initialising, or has an error.", ErrmsgTime);
                     return;
                 }
 
-                if (Tree.LastStatus != null)
+                Composite treeRoot = getTreeRoot();
+
+                if (treeRoot == null)
                 {
-                    Tree.Tick(null);
+                    if (Settings.Debug)
+                        LogError("Plugin " + PluginName + " tree root function returned null. Plugin is either still initialising, or has an error.", ErrmsgTime);
+                    return;
+                }
+
+                if (treeRoot.LastStatus != null)
+                {
+                    treeRoot.Tick(null);
 
                     // If the last status wasn't running, stop the tree, and restart it.
-                    if (Tree.LastStatus != RunStatus.Running)
+                    if (treeRoot.LastStatus != RunStatus.Running)
                     {
-                        Tree.Stop(null);
+                        treeRoot.Stop(null);
 
                         UpdateCache();
-                        Tree.Start(null);
+                        treeRoot.Start(null);
                     }
                 }
                 else
                 {
                     UpdateCache();
-                    Tree.Start(stateInfo);
-                    RunStatus status = Tree.Tick(stateInfo);
+                    treeRoot.Start(null);
+                    RunStatus status = treeRoot.Tick(null);
                 }
-            }
-
-            // If we are not on a strict tickrate, then we need to start the timer again
-            if (!Settings.StrictTickRate)
-            {
-                StartTimer();
-            }
+            };
         }
 
         protected virtual void UpdateCache()
@@ -208,9 +174,6 @@ namespace TreeRoutine
             if (!Settings.ShowWindow) return;
             ImGuiExtension.BeginWindow($"{PluginName} Settings", Settings.LastSettingPos.X, Settings.LastSettingPos.Y, Settings.LastSettingSize.X, Settings.LastSettingSize.Y);
 
-            Settings.TickRate.Value = ImGuiExtension.IntSlider("Tick Rate", Settings.TickRate);
-            Settings.StrictTickRate.Value = ImGuiExtension.Checkbox("Strict Tick Rate", Settings.StrictTickRate);
-            ImGui.Separator();
             Settings.Debug.Value = ImGuiExtension.Checkbox("Debug Mode", Settings.Debug);
 
             // Storing window Position and Size changed by the user

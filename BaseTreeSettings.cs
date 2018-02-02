@@ -29,8 +29,6 @@ namespace TreeRoutine
         public ImGuiVector2 LastSettingPos { get; set; }
         public ImGuiVector2 LastSettingSize { get; set; }
 
-        public RangeNode<int> TickRate { get; set; } = new RangeNode<int>(50, 15, 1000);
-        public ToggleNode StrictTickRate { get; set; } = false;
         public ToggleNode Debug { get; set; } = false;
     }
 }
