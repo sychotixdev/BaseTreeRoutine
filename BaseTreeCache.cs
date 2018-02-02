@@ -19,6 +19,5 @@ namespace TreeRoutine
 
         public Boolean InHideout { get; set; } = false;
 
-        public long TickRate { get; set; } = 0; 
     }
 }

@@ -35,6 +35,12 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
         public PlayerFlask getFlaskInfo(int flaskIndex)
         {
 
+            if (Core.Cache.MiscBuffInfo == null)
+            {
+                Core.LogErr("Error: Misc Buff Info cache was never initialized. This method will not function properly.", Core.ErrmsgTime);
+                return null;
+            }
+
             Entity currentFlask = Core.Cache.SavedIngameState.IngameUi.InventoryPanel[InventoryIndex.Flask][flaskIndex, 0, 5];
             if (currentFlask == null || currentFlask.Address == 0x00)
                 return null;
@@ -96,6 +102,12 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
         private void handleFlaskMods(PlayerFlask flask)
         {
             FlaskActions flaskActionOut;
+            if (Core.Cache.FlaskInfo == null)
+            {
+                Core.LogErr("Error: Flask Info cache was never initialized. This method will not function properly.", Core.ErrmsgTime);
+                return;
+            }
+
             //Checking flask action based on flask name type.
             if (!Core.Cache.FlaskInfo.FlaskTypes.TryGetValue(flask.Name, out flaskActionOut))
                 Core.LogErr("Error: " + flask.Name + " name not found. Report this error message.", Core.ErrmsgTime);

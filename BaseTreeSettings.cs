@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ImGuiVector2 = System.Numerics.Vector2;
+using ImGuiVector4 = System.Numerics.Vector4;
 
 namespace TreeRoutine
 {
@@ -14,18 +16,19 @@ namespace TreeRoutine
         public BaseTreeSettings()
         {
             Enable = false;
-            Debug = false;
-            TickRate = new RangeNode<int>(50, 15, 1000);
-            StrictTickRate = false;
+
+            var centerPos = BasePlugin.API.GameController.Window.GetWindowRectangle().Center;
+            LastSettingSize = new ImGuiVector2(620, 376);
+            LastSettingPos = new ImGuiVector2(centerPos.X - LastSettingSize.X / 2, centerPos.Y - LastSettingSize.Y / 2);
         }
 
-        [Menu("Tick Rate", 3, Tooltip = "Milliseconds between every tick of plugin.")]
-        public RangeNode<int> TickRate { get; set; }
 
-        [Menu("Strict Tick Rate", 4, Tooltip = "Enable to force a strict tick rate. This will ensure the ticks are at a constant timing, but may cause ticks to overlap as the previous tick may not have finished. Enable only if you have a reason to.")]
-        public ToggleNode StrictTickRate { get; set; }
 
-        [Menu("Debug Mode", 100, Tooltip = "Enables debug logging to help debug flask issues.")]
-        public ToggleNode Debug { get; set; }
+        [Menu("Show ImGui Settings")]
+        public ToggleNode ShowWindow { get; set; } = false;
+        public ImGuiVector2 LastSettingPos { get; set; }
+        public ImGuiVector2 LastSettingSize { get; set; }
+
+        public ToggleNode Debug { get; set; } = false;
     }
 }
