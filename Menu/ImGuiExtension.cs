@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using ImGuiNET;
 using PoeHUD.Hud.Settings;
@@ -260,6 +261,23 @@ namespace TreeRoutine.Menu
             {
                 ImGui.SetTooltip(desc);
             }
+        }
+
+        public static unsafe string InputText(string label, string currentValue, uint maxLength, InputTextFlags flags)
+        {
+            var currentStringBytes = Encoding.Default.GetBytes(currentValue);
+            var buffer = new byte[maxLength];
+            Array.Copy(currentStringBytes, buffer, Math.Min(currentStringBytes.Length, maxLength));
+
+            int Callback(TextEditCallbackData* data)
+            {
+                var pCursorPos = (int*)data->UserData;
+                if (!data->HasSelection()) *pCursorPos = data->CursorPos;
+                return 0;
+            }
+
+            ImGui.InputText(label, buffer, maxLength, flags, Callback);
+            return Encoding.Default.GetString(buffer).TrimEnd('\0');
         }
     }
 }
