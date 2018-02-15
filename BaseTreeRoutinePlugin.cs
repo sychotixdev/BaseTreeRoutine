@@ -44,6 +44,13 @@ namespace TreeRoutine
             return JsonConvert.DeserializeObject<TSettingType>(File.ReadAllText(fileName));
         }
 
+        public static void SaveSettingFile<TSettingType>(String fileName, TSettingType setting)
+        {
+            string serialized = JsonConvert.SerializeObject(setting);
+
+            File.WriteAllText(fileName, serialized);
+        }
+
         public override void Initialise()
         {
             PluginName = "Base Tree Routine Plugin";
@@ -101,49 +108,37 @@ namespace TreeRoutine
             }
         }
 
-        public System.Action CreateTreeTickAction(Func<Composite> getTreeRoot)
+        public void TickTree(Composite treeRoot)
         {
-            return () =>
+            if (Settings.Debug)
+                LogMessage("Tick", LogmsgTime);
+
+            if (treeRoot == null)
             {
                 if (Settings.Debug)
-                    LogMessage("Tick", LogmsgTime);
+                    LogError("Plugin " + PluginName + " tree root function returned null. Plugin is either still initialising, or has an error.", ErrmsgTime);
+                return;
+            }
 
-                if (getTreeRoot == null)
+            if (treeRoot.LastStatus != null)
+            {
+                treeRoot.Tick(null);
+
+                // If the last status wasn't running, stop the tree, and restart it.
+                if (treeRoot.LastStatus != RunStatus.Running)
                 {
-                    if (Settings.Debug)
-                        LogError("Plugin " + PluginName + " tree root function was null. Plugin is either still initialising, or has an error.", ErrmsgTime);
-                    return;
-                }
+                    treeRoot.Stop(null);
 
-                Composite treeRoot = getTreeRoot();
-
-                if (treeRoot == null)
-                {
-                    if (Settings.Debug)
-                        LogError("Plugin " + PluginName + " tree root function returned null. Plugin is either still initialising, or has an error.", ErrmsgTime);
-                    return;
-                }
-
-                if (treeRoot.LastStatus != null)
-                {
-                    treeRoot.Tick(null);
-
-                    // If the last status wasn't running, stop the tree, and restart it.
-                    if (treeRoot.LastStatus != RunStatus.Running)
-                    {
-                        treeRoot.Stop(null);
-
-                        UpdateCache();
-                        treeRoot.Start(null);
-                    }
-                }
-                else
-                {
                     UpdateCache();
                     treeRoot.Start(null);
-                    RunStatus status = treeRoot.Tick(null);
                 }
-            };
+            }
+            else
+            {
+                UpdateCache();
+                treeRoot.Start(null);
+                RunStatus status = treeRoot.Tick(null);
+            }
         }
 
         protected virtual void UpdateCache()
@@ -171,7 +166,7 @@ namespace TreeRoutine
 
         protected virtual void RunWindow()
         {
-            if (!Settings.ShowWindow) return;
+            if (!Settings.ShowProfileMenu) return;
             ImGuiExtension.BeginWindow($"{PluginName} Settings", Settings.LastSettingPos.X, Settings.LastSettingPos.Y, Settings.LastSettingSize.X, Settings.LastSettingSize.Y);
 
             Settings.Debug.Value = ImGuiExtension.Checkbox("Debug Mode", Settings.Debug);

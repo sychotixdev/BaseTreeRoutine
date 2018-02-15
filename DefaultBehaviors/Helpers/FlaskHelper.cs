@@ -142,6 +142,11 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             }
         }
 
+        public Boolean canUsePotion(int flaskIndex, int reservedUses = 0)
+        {
+            return canUsePotion(this.getFlaskInfo(flaskIndex), reservedUses);
+        }
+
         public Boolean canUsePotion(PlayerFlask flask, int reservedUses=0)
         {
             if (flask.TotalUses - reservedUses <= 0)

@@ -24,8 +24,12 @@ namespace TreeRoutine
 
 
 
-        [Menu("Show ImGui Settings")]
-        public ToggleNode ShowWindow { get; set; } = false;
+        [Menu("Show Settings")]
+        public ToggleNode ShowSettings { get; set; } = false;
+
+        [Menu("Show Profile Menu")]
+        public ToggleNode ShowProfileMenu { get; set; } = false;
+
         public ImGuiVector2 LastSettingPos { get; set; }
         public ImGuiVector2 LastSettingSize { get; set; }
 
