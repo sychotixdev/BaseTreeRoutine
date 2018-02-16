@@ -253,10 +253,18 @@ namespace TreeRoutine.Menu
         }
 
         // Tooltip Hover
-        public static void ToolTip(string desc)
+        public static void ToolTipWithText(string text, string desc)
         {
             ImGui.SameLine();
             ImGui.TextDisabled("(?)");
+            if (ImGui.IsItemHovered(HoveredFlags.Default))
+            {
+                ImGui.SetTooltip(desc);
+            }
+        }
+
+        public static void ToolTip(string desc)
+        {
             if (ImGui.IsItemHovered(HoveredFlags.Default))
             {
                 ImGui.SetTooltip(desc);
