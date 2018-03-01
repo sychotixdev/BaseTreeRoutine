@@ -166,7 +166,7 @@ namespace TreeRoutine
 
         protected virtual void RunWindow()
         {
-            if (!Settings.ShowProfileMenu) return;
+            if (!Settings.ShowSettings) return;
             ImGuiExtension.BeginWindow($"{PluginName} Settings", Settings.LastSettingPos.X, Settings.LastSettingPos.Y, Settings.LastSettingSize.X, Settings.LastSettingSize.Y);
 
             Settings.Debug.Value = ImGuiExtension.Checkbox("Debug Mode", Settings.Debug);

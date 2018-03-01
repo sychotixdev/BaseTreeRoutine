@@ -83,7 +83,7 @@
       <Name>PoeHUD</Name>
     </ProjectReference>
     <ProjectReference Include="..\TreeSharp\TreeSharp.csproj">
-      <Project>{30311c38-2621-46d1-b4b8-04a65e8f0c5c}</Project>
+      <Project>{0efb3180-8092-494f-b42f-443b77034f67}</Project>
       <Name>TreeSharp</Name>
     </ProjectReference>
   </ItemGroup>

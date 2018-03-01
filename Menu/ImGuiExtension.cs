@@ -20,26 +20,26 @@ namespace TreeRoutine.Menu
             return new ImGuiVector4(width + centerPos.X - width / 2, height + centerPos.Y - height / 2, width, height);
         }
 
-        public static bool BeginWindow(string title, int x, int y, int width, int height, bool autoResize = false)
+        public static bool BeginWindow(string title, int x, int y, int width, int height, WindowFlags flags = WindowFlags.Default)
         {
             ImGui.SetNextWindowPos(new ImGuiVector2(width + x, height + y), Condition.Appearing, new ImGuiVector2(1, 1));
             ImGui.SetNextWindowSize(new ImGuiVector2(width, height), Condition.Appearing);
-            return ImGui.BeginWindow(title, autoResize ? WindowFlags.AlwaysAutoResize : WindowFlags.Default);
+            return ImGui.BeginWindow(title, flags);
         }
 
-        public static bool BeginWindow(string title, float x, float y, float width, float height, bool autoResize = false)
+        public static bool BeginWindow(string title, float x, float y, float width, float height, WindowFlags flags = WindowFlags.Default)
         {
             ImGui.SetNextWindowPos(new ImGuiVector2(width + x, height + y), Condition.Appearing, new ImGuiVector2(1, 1));
             ImGui.SetNextWindowSize(new ImGuiVector2(width, height), Condition.Appearing);
-            return ImGui.BeginWindow(title, autoResize ? WindowFlags.AlwaysAutoResize : WindowFlags.Default);
+            return ImGui.BeginWindow(title, flags);
         }
 
-        public static bool BeginWindowCenter(string title, int width, int height, bool autoResize = false)
+        public static bool BeginWindowCenter(string title, int width, int height, WindowFlags flags = WindowFlags.Default)
         {
             var size = CenterWindow(width, height);
             ImGui.SetNextWindowPos(new ImGuiVector2(size.X, size.Y), Condition.Appearing, new ImGuiVector2(1, 1));
             ImGui.SetNextWindowSize(new ImGuiVector2(size.Z, size.W), Condition.Appearing);
-            return ImGui.BeginWindow(title, autoResize ? WindowFlags.AlwaysAutoResize : WindowFlags.Default);
+            return ImGui.BeginWindow(title, flags);
         }
 
         // Int Sliders
