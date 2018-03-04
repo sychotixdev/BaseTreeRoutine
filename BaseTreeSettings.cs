@@ -20,12 +20,13 @@ namespace TreeRoutine
             var centerPos = BasePlugin.API.GameController.Window.GetWindowRectangle().Center;
             LastSettingSize = new ImGuiVector2(620, 376);
             LastSettingPos = new ImGuiVector2(centerPos.X - LastSettingSize.X / 2, centerPos.Y - LastSettingSize.Y / 2);
+            ShowSettings = false;
         }
 
 
 
         [Menu("Show Configuration Menu")]
-        public ToggleNode ShowSettings { get; set; } = false;
+        public ToggleNode ShowSettings { get; set; }
 
         public ImGuiVector2 LastSettingPos { get; set; }
         public ImGuiVector2 LastSettingSize { get; set; }
