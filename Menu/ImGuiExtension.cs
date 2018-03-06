@@ -287,5 +287,15 @@ namespace TreeRoutine.Menu
             ImGui.InputText(label, buffer, maxLength, flags, Callback);
             return Encoding.Default.GetString(buffer).TrimEnd('\0');
         }
+
+        public static void SpacedTextHeader(string text)
+        {
+            ImGui.Spacing();
+            ImGui.Separator();
+            ImGui.Spacing();
+            ImGui.Text(text);
+            ImGui.Separator();
+            ImGui.Spacing();
+        }
     }
 }

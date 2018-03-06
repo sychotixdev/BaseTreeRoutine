@@ -10,7 +10,6 @@ using PoeHUD.Plugins;
 using TreeSharp;
 using TreeRoutine.Menu;
 using ImGuiNET;
-using System.Collections.Generic;
 
 namespace TreeRoutine
 {
@@ -145,6 +144,8 @@ namespace TreeRoutine
         {
             Cache.SavedIngameState = GameController.Game.IngameState;
         }
+
+        
 
         protected virtual void OnAreaChange(AreaController area)
         {
