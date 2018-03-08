@@ -43,12 +43,19 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
 
             Entity currentFlask = Core.Cache.SavedIngameState.IngameUi.InventoryPanel[InventoryIndex.Flask][flaskIndex, 0, 5];
             if (currentFlask == null || currentFlask.Address == 0x00)
+            {
+                if (Core.Settings.Debug)
+                {
+                    Core.Log("No valid flask in slot " + flaskIndex, 5);
+                }
                 return null;
+            }
 
-            PlayerFlask simplePlayerFlask = new PlayerFlask();
-
-            simplePlayerFlask.Index = flaskIndex;
-            simplePlayerFlask.Name = Core.GameController.Files.BaseItemTypes.Translate(currentFlask.Path).BaseName;
+            PlayerFlask simplePlayerFlask = new PlayerFlask
+            {
+                Index = flaskIndex,
+                Name = Core.GameController.Files.BaseItemTypes.Translate(currentFlask.Path).BaseName
+            };
 
             Charges flaskChargesStruct = currentFlask.GetComponent<Charges>();
             Mods flaskMods = currentFlask.GetComponent<Mods>();
@@ -65,7 +72,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             if (!Core.Cache.MiscBuffInfo.flaskNameToBuffConversion.TryGetValue(
                 flaskBaseName, out flaskBuffOut))
             {
-                Core.LogErr("Cannot find Flask Buff for flask on slot " + (flaskIndex + 1), 5);
+                Core.LogErr("Cannot find Flask Buff for flask on slot " + (flaskIndex + 1) + " with base name: " + (flaskBaseName == null ? "NULL" : flaskBaseName), 5);
                 return null;
             }
 
