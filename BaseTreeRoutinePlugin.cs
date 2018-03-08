@@ -109,34 +109,42 @@ namespace TreeRoutine
 
         public void TickTree(Composite treeRoot)
         {
-            if (Settings.Debug)
-                LogMessage("Tick", LogmsgTime);
-
-            if (treeRoot == null)
+            try
             {
                 if (Settings.Debug)
-                    LogError("Plugin " + PluginName + " tree root function returned null. Plugin is either still initialising, or has an error.", ErrmsgTime);
-                return;
-            }
+                    LogMessage("Tick", LogmsgTime);
 
-            if (treeRoot.LastStatus != null)
-            {
-                treeRoot.Tick(null);
-
-                // If the last status wasn't running, stop the tree, and restart it.
-                if (treeRoot.LastStatus != RunStatus.Running)
+                if (treeRoot == null)
                 {
-                    treeRoot.Stop(null);
+                    if (Settings.Debug)
+                        LogError("Plugin " + PluginName + " tree root function returned null. Plugin is either still initialising, or has an error.", ErrmsgTime);
+                    return;
+                }
 
+                if (treeRoot.LastStatus != null)
+                {
+                    treeRoot.Tick(null);
+
+                    // If the last status wasn't running, stop the tree, and restart it.
+                    if (treeRoot.LastStatus != RunStatus.Running)
+                    {
+                        treeRoot.Stop(null);
+
+                        UpdateCache();
+                        treeRoot.Start(null);
+                    }
+                }
+                else
+                {
                     UpdateCache();
                     treeRoot.Start(null);
+                    RunStatus status = treeRoot.Tick(null);
                 }
             }
-            else
+            catch (Exception e)
             {
-                UpdateCache();
-                treeRoot.Start(null);
-                RunStatus status = treeRoot.Tick(null);
+                LogError("Exception! Printscreen this and post it.\n" + e.StackTrace, 30);
+                throw e;
             }
         }
 
