@@ -53,9 +53,29 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
 
             PlayerFlask simplePlayerFlask = new PlayerFlask
             {
-                Index = flaskIndex,
-                Name = Core.GameController.Files.BaseItemTypes.Translate(currentFlask.Path).BaseName
+                Index = flaskIndex
             };
+
+            if (currentFlask.Path == null || currentFlask.Path.Length == 0)
+            {
+                if (Core.Settings.Debug)
+                {
+                    Core.Log("Ignoring Flask " + flaskIndex + " for an empty or null path.", 5);
+                }
+                return null;
+            }
+
+            var baseItem = Core.GameController.Files.BaseItemTypes.Translate(currentFlask.Path);
+            if (baseItem == null)
+            {
+                if (Core.Settings.Debug)
+                {
+                    Core.Log("Ignoring Flask " + flaskIndex + ". No base item was found! Path: " + currentFlask.Path, 5);
+                }
+                return null;
+            }
+            
+            simplePlayerFlask.Name = baseItem.BaseName;
 
             Charges flaskChargesStruct = currentFlask.GetComponent<Charges>();
             Mods flaskMods = currentFlask.GetComponent<Mods>();
