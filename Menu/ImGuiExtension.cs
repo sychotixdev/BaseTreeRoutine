@@ -206,7 +206,7 @@ namespace TreeRoutine.Menu
 
         // Combo Box
 
-        public static int ComboBox(string sideLabel, int currentSelectedItem, List<string> objectList, ComboFlags comboFlags = ComboFlags.HeightRegular)
+        public static int ComboBox(string sideLabel, int currentSelectedItem, List<string> objectList)
         {
             ImGui.Combo(sideLabel, ref currentSelectedItem, objectList.ToArray());
 
@@ -256,7 +256,7 @@ namespace TreeRoutine.Menu
         public static void ToolTipWithText(string text, string desc)
         {
             ImGui.SameLine();
-            ImGui.TextDisabled("(?)");
+            ImGui.TextDisabled(text);
             if (ImGui.IsItemHovered(HoveredFlags.Default))
             {
                 ImGui.SetTooltip(desc);

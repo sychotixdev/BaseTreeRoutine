@@ -7,8 +7,6 @@ namespace TreeRoutine
 {
     public class BaseTreeCache
     {
-        public IngameState SavedIngameState { get; set; } = null;
-
         public FlaskInformation FlaskInfo { get; set; } = null;
 
         public DebuffPanelConfig DebuffPanelConfig { get; set; } = null;

@@ -150,7 +150,7 @@ namespace TreeRoutine
 
         protected virtual void UpdateCache()
         {
-            Cache.SavedIngameState = GameController.Game.IngameState;
+
         }
 
         

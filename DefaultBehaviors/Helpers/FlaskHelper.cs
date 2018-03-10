@@ -41,7 +41,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
                 return null;
             }
 
-            Entity currentFlask = Core.Cache.SavedIngameState.IngameUi.InventoryPanel[InventoryIndex.Flask][flaskIndex, 0, 5];
+            Entity currentFlask = Core.GameController.Game.IngameState.IngameUi.InventoryPanel[InventoryIndex.Flask][flaskIndex, 0, 5];
             if (currentFlask == null || currentFlask.Address == 0x00)
             {
                 if (Core.Settings.Debug)
