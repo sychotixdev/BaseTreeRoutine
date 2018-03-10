@@ -58,20 +58,14 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
 
             if (currentFlask.Path == null || currentFlask.Path.Length == 0)
             {
-                if (Core.Settings.Debug)
-                {
-                    Core.Log("Ignoring Flask " + flaskIndex + " for an empty or null path.", 5);
-                }
+                Core.LogErr("Ignoring Flask " + flaskIndex + " for an empty or null path.", 5);
                 return null;
             }
 
             var baseItem = Core.GameController.Files.BaseItemTypes.Translate(currentFlask.Path);
             if (baseItem == null)
             {
-                if (Core.Settings.Debug)
-                {
-                    Core.Log("Ignoring Flask " + flaskIndex + ". No base item was found! Path: " + currentFlask.Path, 5);
-                }
+                Core.LogErr("Ignoring Flask " + flaskIndex + ". No base item was found! Path: " + currentFlask.Path, 5);
                 return null;
             }
             
