@@ -136,7 +136,14 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             foreach (var mod in flask.Mods.ItemMods)
             {
                 if (mod.Name.ToLower().Contains("instant"))
-                    flask.Instant = true;
+                {
+                    if (mod.Name.Contains("FlaskPartialInstantRecovery"))
+                        flask.InstantType = FlaskInstantType.Partial;
+                    else if (mod.Name.Contains("FlaskInstantRecoveryOnLowLife"))
+                        flask.InstantType = FlaskInstantType.LowLife;
+                    else if (mod.Name.Contains("FlaskFullInstantRecovery"))
+                        flask.InstantType = FlaskInstantType.LowLife;
+                }
 
                 // We have already decided action2 for unique flasks.
                 if (flask.Mods.ItemRarity == ItemRarity.Unique)

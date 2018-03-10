@@ -8,6 +8,14 @@ using System.Threading.Tasks;
 
 namespace TreeRoutine.FlaskComponents
 {
+    public enum FlaskInstantType
+    {
+        None,
+        LowLife,
+        Partial,
+        Full
+    }
+
     public class PlayerFlask
     {
         public int Index { get; set; } = 0;
@@ -19,7 +27,8 @@ namespace TreeRoutine.FlaskComponents
 
         public FlaskActions Action1 { get; set; } = FlaskActions.None;
         public FlaskActions Action2 { get; set; } = FlaskActions.None;
-        public Boolean Instant { get; set; } = false;
+        public FlaskInstantType InstantType { get; set; }
+        public Boolean Instant => InstantType != FlaskInstantType.None;
         public Mods Mods { get; set; } = null;
     }
 }
