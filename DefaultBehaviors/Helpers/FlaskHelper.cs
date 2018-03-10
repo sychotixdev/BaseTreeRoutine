@@ -142,7 +142,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
                     else if (mod.Name.Contains("FlaskInstantRecoveryOnLowLife"))
                         flask.InstantType = FlaskInstantType.LowLife;
                     else if (mod.Name.Contains("FlaskFullInstantRecovery"))
-                        flask.InstantType = FlaskInstantType.LowLife;
+                        flask.InstantType = FlaskInstantType.Full;
                 }
 
                 // We have already decided action2 for unique flasks.
