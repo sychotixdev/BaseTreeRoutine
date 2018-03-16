@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ImGuiVector2 = System.Numerics.Vector2;
-using ImGuiVector4 = System.Numerics.Vector4;
+
 
 namespace TreeRoutine
 {
@@ -16,21 +15,10 @@ namespace TreeRoutine
         public BaseTreeSettings()
         {
             Enable = false;
-
-            var centerPos = BasePlugin.API.GameController.Window.GetWindowRectangle().Center;
-            LastSettingSize = new ImGuiVector2(620, 376);
-            LastSettingPos = new ImGuiVector2(centerPos.X - LastSettingSize.X / 2, centerPos.Y - LastSettingSize.Y / 2);
-            ShowSettings = false;
+            Debug = false;
         }
 
-
-
-        [Menu("Show Configuration Menu")]
-        public ToggleNode ShowSettings { get; set; }
-
-        public ImGuiVector2 LastSettingPos { get; set; }
-        public ImGuiVector2 LastSettingSize { get; set; }
-
+        [Menu("Debug")]
         public ToggleNode Debug { get; set; } = false;
     }
 }

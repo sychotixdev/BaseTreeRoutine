@@ -166,29 +166,6 @@ namespace TreeRoutine
                 Cache.InTown = area.CurrentArea.IsTown;
             }
         }
-
-        public override void Render()
-        {
-            base.Render();
-            RunWindow();
-        }
-
-        protected virtual void RunWindow()
-        {
-            if (!Settings.ShowSettings) return;
-            ImGuiExtension.BeginWindow($"{PluginName} Settings", Settings.LastSettingPos.X, Settings.LastSettingPos.Y, Settings.LastSettingSize.X, Settings.LastSettingSize.Y);
-
-            Settings.Debug.Value = ImGuiExtension.Checkbox("Debug Mode", Settings.Debug);
-
-            // Storing window Position and Size changed by the user
-            if (ImGui.GetWindowHeight() > 21)
-            {
-                Settings.LastSettingPos = ImGui.GetWindowPosition();
-                Settings.LastSettingSize = ImGui.GetWindowSize();
-            }
-
-            ImGui.EndWindow();
-        }
     }
 }
 
