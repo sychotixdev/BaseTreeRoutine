@@ -100,7 +100,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             return playerLife.CurHP <= 0;
         }
 
-        public int? getPlayerStat(PlayerStats playerStat)
+        public int? getPlayerStat(GameStat playerStat)
         {
             int statValue = 0;
             if (!Core.GameController.EntityListWrapper.PlayerStats.TryGetValue(playerStat, out statValue))
@@ -130,7 +130,6 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
 
         public void DrawEllipseToWorld(Vector3 vector3Pos, int radius, int points, int lineWidth, Color color)
         {
-            Core.Log("Testing!", 5);
             var camera = Core.GameController.Game.IngameState.Camera;
 
             var plottedCirclePoints = new List<Vector3>();

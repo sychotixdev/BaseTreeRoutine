@@ -36,7 +36,7 @@ namespace TreeRoutine
         {
             if (!File.Exists(fileName))
             {
-                LogError("Cannot find " + fileName + " file. This plugin will exit.", 10);
+                LogError("BaseTreeRoutinePlugin: Cannot find " + fileName + " file. This plugin will exit.", 10);
                 return default(TSettingType);
             }
 
@@ -88,14 +88,14 @@ namespace TreeRoutine
                 if (Settings.Enable.Value)
                 {
                     if (Settings.Debug.Value)
-                        LogMessage("Enabling " + PluginName + ".", LogmsgTime);
+                        LogMessage(PluginName + ": Enabling " + PluginName + ".", LogmsgTime);
 
                     GameController.Area.OnAreaChange += OnAreaChange;
                 }
                 else
                 {
                     if (Settings.Debug.Value)
-                        LogMessage("Disabling " + PluginName + ".", LogmsgTime);
+                        LogMessage(PluginName + ": Disabling " + PluginName + ".", LogmsgTime);
 
                     GameController.Area.OnAreaChange -= OnAreaChange;
                 }
@@ -103,7 +103,7 @@ namespace TreeRoutine
             catch (Exception)
             {
 
-                LogError("Error Starting/Stopping " + PluginName + ".", ErrmsgTime);
+                LogError(PluginName + ": Error Starting/Stopping " + PluginName + ".", ErrmsgTime);
             }
         }
 
@@ -112,7 +112,7 @@ namespace TreeRoutine
             try
             {
                 if (Settings.Debug)
-                    LogMessage("Tick", LogmsgTime);
+                    LogMessage(PluginName + ": Tick", LogmsgTime);
 
                 if (treeRoot == null)
                 {
@@ -143,7 +143,7 @@ namespace TreeRoutine
             }
             catch (Exception e)
             {
-                LogError("Exception! Printscreen this and post it.\n" + e.StackTrace, 30);
+                LogError(PluginName + ": Exception! Printscreen this and post it.\n" + e.Message + "\n" + e.StackTrace, 30);
                 throw e;
             }
         }
@@ -160,7 +160,7 @@ namespace TreeRoutine
             if (Settings.Enable.Value)
             {
                 if (Settings.Debug)
-                    LogMessage("Area has been changed.", LogmsgTime);
+                    LogMessage(PluginName + ": Area has been changed.", LogmsgTime);
 
                 Cache.InHideout = area.CurrentArea.IsHideout;
                 Cache.InTown = area.CurrentArea.IsTown;
