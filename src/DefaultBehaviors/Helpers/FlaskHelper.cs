@@ -81,7 +81,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             //TreeRoutine.LogError("Flask: " + simplePlayerFlask.Name + "Num Charges: " + flaskChargesStruct.NumCharges + " Use Charges: " + useCharge + " Charges Per use: " + flaskChargesStruct.ChargesPerUse + " Total Uses: " + simplePlayerFlask.TotalUses, 5);
 
 
-            var flaskBaseName = currentFlask.GetComponent<Base>().Name;
+            var flaskBaseName = currentFlask.GetComponent<PoeHUD.Poe.Components.Base>().Name;
             String flaskBuffOut = null;
             if (!Core.Cache.MiscBuffInfo.flaskNameToBuffConversion.TryGetValue(
                 flaskBaseName, out flaskBuffOut))
