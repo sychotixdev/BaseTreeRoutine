@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Buffs\BuffsEnum.cs" />
     <Compile Include="DefaultBehaviors\Actions\UseHotkeyAction.cs" />
     <Compile Include="DefaultBehaviors\Helpers\FlaskHelper.cs" />
     <Compile Include="DefaultBehaviors\Helpers\KeyboardHelper.cs" />

@@ -59,6 +59,7 @@ namespace TreeRoutine
             LoadSettingsFiles();
             InitializeHelpers();
 
+            OnAreaChange(GameController.Area);
             OnPluginToggle();
             Settings.Enable.OnValueChanged += OnPluginToggle;
         }
@@ -157,11 +158,11 @@ namespace TreeRoutine
 
         protected virtual void OnAreaChange(AreaController area)
         {
-            if (Settings.Enable.Value)
-            {
-                if (Settings.Debug)
-                    LogMessage(PluginName + ": Area has been changed.", LogmsgTime);
+            if (Settings.Debug)
+                LogMessage(PluginName + ": Area has been changed.", LogmsgTime);
 
+            if (Settings.Enable.Value && area != null && area.CurrentArea != null)
+            {
                 Cache.InHideout = area.CurrentArea.IsHideout;
                 Cache.InTown = area.CurrentArea.IsTown;
             }
