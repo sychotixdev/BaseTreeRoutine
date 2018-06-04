@@ -86,7 +86,8 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             if (!Core.Cache.MiscBuffInfo.flaskNameToBuffConversion.TryGetValue(
                 flaskBaseName, out flaskBuffOut))
             {
-                Core.LogErr(Core.PluginName + ": Cannot find Flask Buff for flask on slot " + (flaskIndex + 1) + " with base name: " + (flaskBaseName == null ? "NULL" : flaskBaseName), 5);
+                if (Core.Settings.Debug)
+                    Core.LogErr(Core.PluginName + ": Cannot find Flask Buff for flask on slot " + (flaskIndex + 1) + " with base name: " + (flaskBaseName == null ? "NULL" : flaskBaseName), 5);
                 return null;
             }
 
@@ -131,7 +132,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
 
             //Checking flask action based on flask name type.
             if (!Core.Cache.FlaskInfo.FlaskTypes.TryGetValue(flask.Name, out flaskActionOut))
-                Core.LogErr(Core.PluginName + ": Error: " + flask.Name + " name not found. Report this error message.", Core.ErrmsgTime);
+                Core.LogErr(Core.PluginName + ": Error: " + flask.Name + " name not found. Add to config/flaskinfo.json and report this error message.", Core.ErrmsgTime);
             else flask.Action1 = flaskActionOut;
 
             //Checking for unique flasks.
@@ -141,7 +142,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
 
                 //Enabling Unique flask action 2.
                 if (!Core.Cache.FlaskInfo.UniqueFlaskNames.TryGetValue(flask.Name, out flaskActionOut))
-                    Core.LogErr(Core.PluginName + ": Error: " + flask.Name + " unique name not found. Report this error message.", Core.ErrmsgTime);
+                    Core.LogErr(Core.PluginName + ": Error: " + flask.Name + " unique name not found. Add to config/flaskinfo.json and report this error message.", Core.ErrmsgTime);
                 else flask.Action2 = flaskActionOut;
             }
 
@@ -170,12 +171,12 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             }
         }
 
-        public Boolean canUsePotion(int flaskIndex, int reservedUses = 0)
+        public Boolean canUsePotion(int flaskIndex, int reservedUses = 0, bool ignoreActionType = false)
         {
-            return canUsePotion(this.getFlaskInfo(flaskIndex), reservedUses);
+            return canUsePotion(this.getFlaskInfo(flaskIndex), reservedUses, ignoreActionType);
         }
 
-        public Boolean canUsePotion(PlayerFlask flask, int reservedUses=0)
+        public Boolean canUsePotion(PlayerFlask flask, int reservedUses=0, bool ignoreActionType = false)
         {
             if (flask.TotalUses - reservedUses <= 0)
             {
@@ -183,6 +184,9 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
                     Core.Log(Core.PluginName + ": Don't have enough uses on flask " + flask.Name + " to use.", 1);
                 return false;
             }
+
+            if (ignoreActionType)
+                return true;
 
             if (flask.Action1 == FlaskActions.Life && !Core.PlayerHelper.isHealthBelowPercentage(100))
             {
