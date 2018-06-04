@@ -188,21 +188,21 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             if (ignoreActionType)
                 return true;
 
-            if (flask.Action1 == FlaskActions.Life && !Core.PlayerHelper.isHealthBelowPercentage(100))
+            if (flask.Action1 == FlaskActions.Life && !Core.PlayerHelper.isHealthBelowPercentage(99))
             {
                 if (Core.Settings.Debug)
                     Core.Log(Core.PluginName + ": Can't use life flask " + flask.Name + " at full health.", 1);
                 return false;
             }
 
-            if (flask.Action1 == FlaskActions.Mana && !Core.PlayerHelper.isManaBelowPercentage(100))
+            if (flask.Action1 == FlaskActions.Mana && !Core.PlayerHelper.isManaBelowPercentage(99))
             {
                 if (Core.Settings.Debug)
                     Core.Log(Core.PluginName + ": Can't use mana flask " + flask.Name + " at full mana.", 1);
                 return false;
             }
 
-            if (flask.Action1 == FlaskActions.Hybrid && !(Core.PlayerHelper.isHealthBelowPercentage(100) || Core.PlayerHelper.isManaBelowPercentage(100)))
+            if (flask.Action1 == FlaskActions.Hybrid && !(Core.PlayerHelper.isHealthBelowPercentage(99) || Core.PlayerHelper.isManaBelowPercentage(99)))
             {
                 if (Core.Settings.Debug)
                     Core.Log(Core.PluginName + ": Can't use hybrid " + flask.Name + " at full health and mana.", 1);
