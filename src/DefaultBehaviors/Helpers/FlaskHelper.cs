@@ -173,11 +173,27 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
 
         public Boolean canUsePotion(int flaskIndex, int reservedUses = 0, bool ignoreActionType = false)
         {
-            return canUsePotion(this.getFlaskInfo(flaskIndex), reservedUses, ignoreActionType);
+            PlayerFlask flask = this.getFlaskInfo(flaskIndex);
+            if (flask == null)
+            {
+                if (Core.Settings.Debug)
+                    Core.Log($"{Core.PluginName}: Cannot use a null flask in slot {flaskIndex}.", 1);
+                return false;
+            }
+
+            return canUsePotion(flask, reservedUses, ignoreActionType);
         }
 
         public Boolean canUsePotion(PlayerFlask flask, int reservedUses=0, bool ignoreActionType = false)
         {
+            if (flask == null)
+            {
+                if (Core.Settings.Debug)
+                    Core.Log(Core.PluginName + ": Cannot use a null flask.", 1);
+                return false;
+            }
+                
+
             if (flask.TotalUses - reservedUses <= 0)
             {
                 if (Core.Settings.Debug)
