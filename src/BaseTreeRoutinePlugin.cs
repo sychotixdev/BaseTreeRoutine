@@ -112,6 +112,9 @@ namespace TreeRoutine
         {
             try
             {
+                if (!Settings.Enable)
+                    return;
+
                 if (Settings.Debug)
                     LogMessage(PluginName + ": Tick", LogmsgTime);
 
