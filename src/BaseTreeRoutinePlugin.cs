@@ -125,6 +125,9 @@ namespace TreeRoutine
                     return;
                 }
 
+                if (!TreeHelper.canTick())
+                    return;
+
                 if (treeRoot.LastStatus != null)
                 {
                     treeRoot.Tick(null);
