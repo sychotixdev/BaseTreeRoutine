@@ -71,7 +71,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             
             simplePlayerFlask.Name = baseItem.BaseName;
 
-            Charges flaskChargesStruct = currentFlask.GetComponent<Charges>();
+            PoeHUD.Poe.EntityComponents.Charges flaskChargesStruct = currentFlask.GetComponent<PoeHUD.Poe.EntityComponents.Charges>();
             Mods flaskMods = currentFlask.GetComponent<Mods>();
 
             var useCharge = calculateUseCharges(flaskChargesStruct.ChargesPerUse, flaskMods.ItemMods);
