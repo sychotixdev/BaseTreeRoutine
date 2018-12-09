@@ -2,13 +2,9 @@
 using PoeHUD.Models.Enums;
 using PoeHUD.Poe;
 using PoeHUD.Poe.Components;
-using PoeHUD.Poe.EntityComponents;
 using PoeHUD.Poe.RemoteMemoryObjects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TreeRoutine.DefaultBehaviors.Helpers
 {
@@ -71,7 +67,8 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             
             simplePlayerFlask.Name = baseItem.BaseName;
 
-            PoeHUD.Poe.EntityComponents.Charges flaskChargesStruct = currentFlask.GetComponent<PoeHUD.Poe.EntityComponents.Charges>();
+
+            Charges flaskChargesStruct = currentFlask.GetComponent<Charges>();
             Mods flaskMods = currentFlask.GetComponent<Mods>();
 
             var useCharge = calculateUseCharges(flaskChargesStruct.ChargesPerUse, flaskMods.ItemMods);
