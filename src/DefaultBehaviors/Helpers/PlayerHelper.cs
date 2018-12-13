@@ -1,4 +1,5 @@
-﻿using PoeHUD.Models.Enums;
+﻿using PoeHUD.Controllers;
+using PoeHUD.Models.Enums;
 using PoeHUD.Poe.Components;
 using SharpDX;
 using System;
@@ -100,10 +101,10 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             return playerLife.CurHP <= 0;
         }
 
-        public int? getPlayerStat(GameStat playerStat)
+        public int? getPlayerStat(string playerStat)
         {
             int statValue = 0;
-            if (!Core.GameController.EntityListWrapper.PlayerStats.TryGetValue(playerStat, out statValue))
+            if (!Core.GameController.EntityListWrapper.PlayerStats.TryGetValue(GameController.Instance.Files.Stats.records[playerStat].ID, out statValue))
                 return null;
 
             return statValue;

@@ -5,6 +5,7 @@ using PoeHUD.Poe.Components;
 using PoeHUD.Poe.RemoteMemoryObjects;
 using System;
 using System.Collections.Generic;
+using PoeHUD.Controllers;
 
 namespace TreeRoutine.DefaultBehaviors.Helpers
 {
@@ -105,7 +106,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
         private int calculateUseCharges(float BaseUseCharges, List<ItemMod> flaskMods)
         {
             int totalChargeReduction = 0;
-            if (!Core.GameController.EntityListWrapper.PlayerStats.TryGetValue(GameStat.FlaskChargesUsedPosPct, out totalChargeReduction))
+            if (!Core.GameController.EntityListWrapper.PlayerStats.TryGetValue(GameController.Instance.Files.Stats.records["flask_charges_used_+%"].ID, out totalChargeReduction))
                 totalChargeReduction = 0;
 
             if (totalChargeReduction > 0)
