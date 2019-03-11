@@ -5,6 +5,8 @@ using PoeHUD.Poe.Components;
 using PoeHUD.Poe.RemoteMemoryObjects;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using PoeHUD.Controllers;
 
 namespace TreeRoutine.DefaultBehaviors.Helpers
@@ -19,17 +21,20 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
 
         public List<PlayerFlask> getAllFlaskInfo()
         {
+            var flaskItems = Core.GameController.Game.IngameState.ServerData.PlayerInventories
+                .FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flasks)?.Inventory?.InventorySlotItems;
+
             List<PlayerFlask> flaskList = new List<PlayerFlask>();
             for(int i=0;i<5;i++)
             {
-                var flask = getFlaskInfo(i);
+                var flask = getFlaskInfo(i, flaskItems?.FirstOrDefault(x => x.PosX == i)?.Item);
                 if (flask != null)
                     flaskList.Add(flask);
             }
             return flaskList;
         }
 
-        public PlayerFlask getFlaskInfo(int flaskIndex)
+        public PlayerFlask getFlaskInfo(int flaskIndex, Entity foundFlask=null)
         {
 
             if (Core.Cache.MiscBuffInfo == null)
@@ -38,7 +43,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
                 return null;
             }
 
-            Entity currentFlask = Core.GameController.Game.IngameState.IngameUi.InventoryPanel[InventoryIndex.Flask][flaskIndex, 0, 5];
+            Entity currentFlask = foundFlask ?? Core.GameController.Game.IngameState.ServerData.PlayerInventories.FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flasks)?.Inventory?.InventorySlotItems?.FirstOrDefault(x => x.PosX == flaskIndex)?.Item;
             if (currentFlask == null || currentFlask.Address == 0x00)
             {
                 if (Core.Settings.Debug)
