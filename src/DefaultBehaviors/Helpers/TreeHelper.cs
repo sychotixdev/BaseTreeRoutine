@@ -8,7 +8,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
     {
         public BaseTreeRoutinePlugin<TSettings, TCache> Core { get; set; }
 
-        public Boolean canTick()
+        public Boolean CanTick()
         {
             if (Core.GameController.IsLoading)
             {

@@ -6,7 +6,6 @@ using PoeHUD.Poe.RemoteMemoryObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using PoeHUD.Controllers;
 
 namespace TreeRoutine.DefaultBehaviors.Helpers
@@ -19,22 +18,22 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
 
         public const String ChargeReductionModName = "flaskchargesused";
 
-        public List<PlayerFlask> getAllFlaskInfo()
+        public List<PlayerFlask> GetAllFlaskInfo()
         {
             var flaskItems = Core.GameController.Game.IngameState.ServerData.PlayerInventories
-                .FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flasks)?.Inventory?.InventorySlotItems;
+                .FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flask)?.Inventory?.InventorySlotItems;
 
             List<PlayerFlask> flaskList = new List<PlayerFlask>();
             for(int i=0;i<5;i++)
             {
-                var flask = getFlaskInfo(i, flaskItems?.FirstOrDefault(x => x.PosX == i)?.Item);
+                var flask = GetFlaskInfo(i, flaskItems?.FirstOrDefault(x => x.PosX == i)?.Item);
                 if (flask != null)
                     flaskList.Add(flask);
             }
             return flaskList;
         }
 
-        public PlayerFlask getFlaskInfo(int flaskIndex, Entity foundFlask=null)
+        public PlayerFlask GetFlaskInfo(int flaskIndex, Entity foundFlask=null)
         {
 
             if (Core.Cache.MiscBuffInfo == null)
@@ -43,7 +42,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
                 return null;
             }
 
-            Entity currentFlask = foundFlask ?? Core.GameController.Game.IngameState.ServerData.PlayerInventories.FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flasks)?.Inventory?.InventorySlotItems?.FirstOrDefault(x => x.PosX == flaskIndex)?.Item;
+            Entity currentFlask = foundFlask ?? Core.GameController.Game.IngameState.ServerData.PlayerInventories.FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flask)?.Inventory?.InventorySlotItems?.FirstOrDefault(x => x.PosX == flaskIndex)?.Item;
             if (currentFlask == null || currentFlask.Address == 0x00)
             {
                 if (Core.Settings.Debug)
@@ -77,7 +76,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             Charges flaskChargesStruct = currentFlask.GetComponent<Charges>();
             Mods flaskMods = currentFlask.GetComponent<Mods>();
 
-            var useCharge = calculateUseCharges(flaskChargesStruct.ChargesPerUse, flaskMods.ItemMods);
+            var useCharge = CalculateUseCharges(flaskChargesStruct.ChargesPerUse, flaskMods.ItemMods);
             if (useCharge > 0)
                 simplePlayerFlask.TotalUses = flaskChargesStruct.NumCharges / useCharge;
 
@@ -85,12 +84,11 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
 
 
             var flaskBaseName = currentFlask.GetComponent<PoeHUD.Poe.Components.Base>().Name;
-            String flaskBuffOut = null;
             if (!Core.Cache.MiscBuffInfo.flaskNameToBuffConversion.TryGetValue(
-                flaskBaseName, out flaskBuffOut))
+                flaskBaseName, out string flaskBuffOut))
             {
                 if (Core.Settings.Debug)
-                    Core.LogErr(Core.PluginName + ": Cannot find Flask Buff for flask on slot " + (flaskIndex + 1) + " with base name: " + (flaskBaseName == null ? "NULL" : flaskBaseName), 5);
+                    Core.LogErr(Core.PluginName + ": Cannot find Flask Buff for flask on slot " + (flaskIndex + 1) + " with base name: " + (flaskBaseName ?? "NULL"), 5);
                 return null;
             }
 
@@ -103,15 +101,14 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
 
             simplePlayerFlask.Mods = currentFlask.GetComponent<Mods>();
 
-            handleFlaskMods(simplePlayerFlask);
+            HandleFlaskMods(simplePlayerFlask);
 
             return simplePlayerFlask;
         }
 
-        private int calculateUseCharges(float BaseUseCharges, List<ItemMod> flaskMods)
+        private int CalculateUseCharges(float BaseUseCharges, List<ItemMod> flaskMods)
         {
-            int totalChargeReduction = 0;
-            if (!Core.GameController.EntityListWrapper.PlayerStats.TryGetValue(GameController.Instance.Files.Stats.records["flask_charges_used_+%"].ID, out totalChargeReduction))
+            if (!Core.GameController.EntityListWrapper.PlayerStats.TryGetValue(GameController.Instance.Files.Stats.records["flask_charges_used_+%"].ID, out int totalChargeReduction))
                 totalChargeReduction = 0;
 
             if (totalChargeReduction > 0)
@@ -124,9 +121,8 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             return (int)Math.Floor(BaseUseCharges);
         }
 
-        private void handleFlaskMods(PlayerFlask flask)
+        private void HandleFlaskMods(PlayerFlask flask)
         {
-            FlaskActions flaskActionOut;
             if (Core.Cache.FlaskInfo == null)
             {
                 Core.LogErr(Core.PluginName + ": Error: Flask Info cache was never initialized. This method will not function properly.", Core.ErrmsgTime);
@@ -134,7 +130,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             }
 
             //Checking flask action based on flask name type.
-            if (!Core.Cache.FlaskInfo.FlaskTypes.TryGetValue(flask.Name, out flaskActionOut))
+            if (!Core.Cache.FlaskInfo.FlaskTypes.TryGetValue(flask.Name, out FlaskActions flaskActionOut))
                 Core.LogErr(Core.PluginName + ": Error: " + flask.Name + " name not found. Add to config/flaskinfo.json and report this error message.", Core.ErrmsgTime);
             else flask.Action1 = flaskActionOut;
 
@@ -149,8 +145,6 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
                 else flask.Action2 = flaskActionOut;
             }
 
-            //Checking flask mods.
-            FlaskActions action2 = FlaskActions.Ignore;
             foreach (var mod in flask.Mods.ItemMods)
             {
                 if (mod.Name.ToLower().Contains("instant"))
@@ -167,16 +161,18 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
                 if (flask.Mods.ItemRarity == ItemRarity.Unique)
                     continue;
 
-                if (!Core.Cache.FlaskInfo.FlaskMods.TryGetValue(mod.Name, out action2))
+
+                //Checking flask mods.
+                if (!Core.Cache.FlaskInfo.FlaskMods.TryGetValue(mod.Name, out FlaskActions action2))
                     Core.LogErr(Core.PluginName + ": Error: " + mod.Name + " mod not found. Is it unique flask? If not, report this error message.", Core.ErrmsgTime);
                 else if (action2 != FlaskActions.Ignore)
                     flask.Action2 = action2;
             }
         }
 
-        public Boolean canUsePotion(int flaskIndex, int reservedUses = 0, bool ignoreActionType = false)
+        public Boolean CanUsePotion(int flaskIndex, int reservedUses = 0, bool ignoreActionType = false)
         {
-            PlayerFlask flask = this.getFlaskInfo(flaskIndex);
+            PlayerFlask flask = this.GetFlaskInfo(flaskIndex);
             if (flask == null)
             {
                 if (Core.Settings.Debug)
@@ -184,10 +180,10 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
                 return false;
             }
 
-            return canUsePotion(flask, reservedUses, ignoreActionType);
+            return CanUsePotion(flask, reservedUses, ignoreActionType);
         }
 
-        public Boolean canUsePotion(PlayerFlask flask, int reservedUses=0, bool ignoreActionType = false)
+        public Boolean CanUsePotion(PlayerFlask flask, int reservedUses=0, bool ignoreActionType = false)
         {
             if (flask == null)
             {

@@ -48,6 +48,10 @@
       <HintPath>$(POEHUD_PATH)\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PoeHUD">
+      <HintPath>$(POEHUD_PATH)\PoeHUD.exe</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="SharpDX.Mathematics">
       <HintPath>$(POEHUD_PATH)\SharpDX.Mathematics.dll</HintPath>
       <Private>False</Private>
@@ -107,13 +111,6 @@
     <Compile Include="TreeSharp\UntilFailure.cs" />
     <Compile Include="TreeSharp\UntilSuccess.cs" />
     <Compile Include="TreeSharp\Wait.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\PoEHUD\src\PoeHUD.csproj">
-      <Project>{e86368b2-ae1e-4489-a749-e29a0ab48f83}</Project>
-      <Name>PoeHUD</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="config\FlaskBuffDetails.json">

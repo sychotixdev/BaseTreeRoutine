@@ -37,7 +37,7 @@ namespace TreeRoutine
             if (!File.Exists(fileName))
             {
                 LogError("BaseTreeRoutinePlugin: Cannot find " + fileName + " file. This plugin will exit.", 10);
-                return default(TSettingType);
+                return default;
             }
 
             return JsonConvert.DeserializeObject<TSettingType>(File.ReadAllText(fileName));
@@ -59,7 +59,7 @@ namespace TreeRoutine
             LoadSettingsFiles();
             InitializeHelpers();
 
-            OnAreaChange(GameController.Area);
+            OnAreaChangeMethod(GameController.Area);
             OnPluginToggle();
             Settings.Enable.OnValueChanged += OnPluginToggle;
         }
@@ -91,14 +91,14 @@ namespace TreeRoutine
                     if (Settings.Debug.Value)
                         LogMessage(PluginName + ": Enabling " + PluginName + ".", LogmsgTime);
 
-                    GameController.Area.OnAreaChange += OnAreaChange;
+                    OnAreaChange += OnAreaChangeMethod;
                 }
                 else
                 {
                     if (Settings.Debug.Value)
                         LogMessage(PluginName + ": Disabling " + PluginName + ".", LogmsgTime);
 
-                    GameController.Area.OnAreaChange -= OnAreaChange;
+                    OnAreaChange += OnAreaChangeMethod;
                 }
             }
             catch (Exception)
@@ -159,7 +159,7 @@ namespace TreeRoutine
 
         
 
-        protected virtual void OnAreaChange(AreaController area)
+        protected void OnAreaChangeMethod(AreaController area)
         {
             if (Settings.Debug)
                 LogMessage(PluginName + ": Area has been changed.", LogmsgTime);
