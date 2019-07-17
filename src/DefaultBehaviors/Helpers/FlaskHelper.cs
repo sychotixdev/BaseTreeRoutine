@@ -26,7 +26,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
             List<PlayerFlask> flaskList = new List<PlayerFlask>();
             for(int i=0;i<5;i++)
             {
-                var flask = GetFlaskInfo(i, flaskItems?.FirstOrDefault(x => x.PosX == i)?.Item);
+                var flask = GetFlaskInfo(i, flaskItems?.FirstOrDefault(x => x.InventoryPosition.X == i)?.Item);
                 if (flask != null)
                     flaskList.Add(flask);
             }
@@ -42,7 +42,7 @@ namespace TreeRoutine.DefaultBehaviors.Helpers
                 return null;
             }
 
-            Entity currentFlask = foundFlask ?? Core.GameController.Game.IngameState.ServerData.PlayerInventories.FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flask)?.Inventory?.InventorySlotItems?.FirstOrDefault(x => x.PosX == flaskIndex)?.Item;
+            Entity currentFlask = foundFlask ?? Core.GameController.Game.IngameState.ServerData.PlayerInventories.FirstOrDefault(x => x.Inventory.InventType == InventoryTypeE.Flask)?.Inventory?.InventorySlotItems?.FirstOrDefault(x => x.InventoryPosition.X == flaskIndex)?.Item;
             if (currentFlask == null || currentFlask.Address == 0x00)
             {
                 if (Core.Settings.Debug)
